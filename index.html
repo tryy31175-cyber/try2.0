@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Bro!</title>
+    <title>Happy Birthday Rahul!</title>
     <style>
         * {
             box-sizing: border-box;
@@ -38,7 +38,7 @@
         }
 
         /* Page Colors and Aesthetics */
-        #page1 { background: linear-gradient(135deg, #ff007f, #7f00ff); }
+        #page1 { background: linear-gradient(135deg, #39ff14, #ff007f); } /* Crazy Neon Green to Pink */
         #page2 { background: linear-gradient(135deg, #00f2fe, #4facfe); }
         #page3 { background: linear-gradient(135deg, #00ff87, #60efff); color: #000; }
         #page4 { background: linear-gradient(135deg, #f12711, #f5af19); }
@@ -76,6 +76,7 @@
             font-size: 1.2rem;
             line-height: 1.8;
             font-family: 'Courier New', monospace;
+            color: #fff;
         }
 
         .stats-box span {
@@ -91,18 +92,39 @@
             border-radius: 10px;
         }
 
-        .countdown {
-            font-size: 2.5rem;
-            font-family: monospace;
-            background: #000;
-            color: #0f0;
-            padding: 15px 25px;
-            border-radius: 10px;
+        /* Countdown Grid Display */
+        .countdown-container {
+            display: flex;
+            gap: 15px;
             margin-top: 20px;
-            box-shadow: inset 0 0 10px #000;
         }
 
-        /* Buttons */
+        .countdown-box {
+            background: #000;
+            color: #0f0;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 2rem;
+            min-width: 100px;
+            box-shadow: inset 0 0 10px rgba(0,255,0,0.5);
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            color: #fff;
+            text-transform: uppercase;
+            margin-top: 5px;
+            font-family: sans-serif;
+        }
+
+        /* Buttons layout */
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
         .btn {
             padding: 15px 30px;
             font-size: 1.5rem;
@@ -114,11 +136,20 @@
             color: #000;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             transition: 0.2s;
-            margin-top: 30px;
         }
 
         .btn:hover {
             transform: scale(1.1) rotate(-2deg);
+        }
+
+        .btn-back {
+            background: #333;
+            color: #fff;
+        }
+
+        .btn-back:hover {
+            background: #555;
+            transform: scale(1.1) rotate(2deg);
         }
 
         .btn-container {
@@ -150,41 +181,75 @@
 </head>
 <body>
 
+    <audio id="profileSong" src="profile_song.mp3" preload="auto" loop></audio>
+    <audio id="nextSound" src="next.mp3" preload="auto"></audio>
+    <audio id="backSound" src="back.mp3" preload="auto"></audio>
+    <audio id="memorySong" src="memory_song.mp3" preload="auto" loop></audio>
     <audio id="memeSound" src="sound.mp3" preload="auto"></audio>
 
     <div class="page-container" id="mainContainer">
 
         <div class="page" id="page1">
             <h1>The Myth. The Legend.</h1>
-            <img src="profile.jpg" alt="Brother's Face" class="profile-img">
+            <img src="profile.jpg" alt="Rahul's Face" class="profile-img">
             <div class="stats-box">
-                📁 <b>Name:</b> Big Bro<br>
+                📁 <b>Name:</b> Rahul Ghosh (Big Bro)<br>
                 💇‍♂️ <b>Hair Density:</b> <span>Decreasing day by day</span><br>
                 ✨ <b>Aura:</b> <span>99999+</span><br>
                 💤 <b>Sleep Status:</b> <span>5 minutes more...</span><br>
                 😇 <b>Discipline Level:</b> <span>God knows only</span>
             </div>
-            <button class="btn" onclick="nextPage(1)">Next Page ➡️</button>
+            <div class="btn-group">
+                <button class="btn" onclick="navigatePage(1, 'next')">Next Page ➡️</button>
+            </div>
         </div>
 
         <div class="page" id="page2">
             <h1>Absolute Facts Only</h1>
             <p class="joke-text">"You are never allowed to call me annoying when you literally spent the first few years of your life trying to eat dirt and crying because the TV turned off."</p>
-            <button class="btn" onclick="nextPage(2)">Next Page ➡️</button>
+            <div class="btn-group">
+                <button class="btn btn-back" onclick="navigatePage(0, 'back')">⬅️ Go Back</button>
+                <button class="btn" onclick="navigatePage(2, 'next')">Next Page ➡️</button>
+            </div>
         </div>
 
         <div class="page" id="page3">
             <h1>A Core Memory</h1>
             <img src="memory.jpg" alt="Us" class="memory-img" style="width: 400px; height: auto;">
             <p style="font-size: 1.5rem;">Look how normal we pretended to be here.</p>
-            <button class="btn" onclick="nextPage(3)" style="background: #000; color: #fff;">Next Page ➡️</button>
+            <div class="btn-group">
+                <button class="btn btn-back" style="background: #000; color: #fff;" onclick="navigatePage(1, 'back')">⬅️ Go Back</button>
+                <button class="btn" style="background: #000; color: #fff;" onclick="navigatePage(3, 'next')">Next Page ➡️</button>
+            </div>
         </div>
 
         <div class="page" id="page4">
             <h1>Unbroken Streak Record</h1>
-            <p style="font-size: 1.5rem;">Total consecutive seconds on earth without clearing browser history:</p>
-            <div class="countdown" id="incognitoTimer">0000000000</div>
-            <button class="btn" onclick="nextPage(4)">Next Page ➡️</button>
+            <p style="font-size: 1.5rem;">Total consecutive time on earth without clearing browser history:</p>
+            
+            <div class="countdown-container">
+                <div>
+                    <div class="countdown-box" id="daysBox">00</div>
+                    <div class="countdown-label">Days</div>
+                </div>
+                <div>
+                    <div class="countdown-box" id="hoursBox">00</div>
+                    <div class="countdown-label">Hours</div>
+                </div>
+                <div>
+                    <div class="countdown-box" id="minsBox">00</div>
+                    <div class="countdown-label">Minutes</div>
+                </div>
+                <div>
+                    <div class="countdown-box" id="secsBox">00</div>
+                    <div class="countdown-label">Seconds</div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-back" onclick="navigatePage(2, 'back')">⬅️ Go Back</button>
+                <button class="btn" onclick="navigatePage(4, 'next')">Next Page ➡️</button>
+            </div>
         </div>
 
         <div class="page" id="page5">
@@ -195,13 +260,19 @@
                 <button class="btn" id="passBtn" onmouseover="dodgeButton()" onclick="dodgeButton()" style="background: #ff4757; color: white;">Please pass this page</button>
                 <button class="btn" onclick="triggerMeme()" style="background: #2ed573; color: white;">View what is inside</button>
             </div>
+            <div class="btn-group">
+                <button class="btn btn-back" onclick="navigatePage(3, 'back')">⬅️ Go Back</button>
+            </div>
         </div>
 
         <div class="page" id="page6">
-            <h1 style="color: #ff007f;">Happy Birthday! 🎉</h1>
+            h1 style="color: #ff007f;">Happy Birthday Rahul! 🎉</h1>
             <p class="wish-text">
                 "Jokes apart... Thank you for being the best big brother I could ever ask for. Even though you drive me crazy and your hair is abandoning you, you've always got my back. I'm incredibly lucky to be so open with you and have you in my life. Cheers to another year of chaos! Love you, bro!" ❤️
             </p>
+            <div class="btn-group">
+                <button class="btn btn-back" onclick="navigatePage(4, 'back')">⬅️ Start Over?</button>
+            </div>
         </div>
 
     </div>
@@ -215,27 +286,69 @@
     <script>
         let currentIdx = 0;
         const container = document.getElementById('mainContainer');
+        const profileSong = document.getElementById('profileSong');
+        const nextSound = document.getElementById('nextSound');
+        const backSound = document.getElementById('backSound');
+        const memorySong = document.getElementById('memorySong');
 
-        // Function to handle the sliding animations
-        function nextPage(currentPageNum) {
-            currentIdx = currentPageNum;
+        // Automatically attempt to play profile song on start
+        window.addEventListener('DOMContentLoaded', () => {
+            // Modern web browsers require user interaction before playing audio. 
+            // The profile song will play fully as soon as he clicks anywhere or triggers the first next button.
+            profileSong.play().catch(e => console.log("Profile audio waiting for interaction"));
+        });
+
+        // Function to handle page transitions and specific sound types
+        function navigatePage(targetPageNum, direction) {
+            // Play directional sound effect based on button type
+            if (direction === 'next') {
+                nextSound.currentTime = 0;
+                nextSound.play().catch(e => console.log("Next audio playback blocked: ", e));
+            } else if (direction === 'back') {
+                backSound.currentTime = 0;
+                backSound.play().catch(e => console.log("Back audio playback blocked: ", e));
+            }
+
+            currentIdx = targetPageNum;
             container.style.transform = `translateY(-${currentIdx * 100}vh)`;
+
+            // Manage Profile Track (Page 1 is at index 0)
+            if (currentIdx === 0) {
+                profileSong.play().catch(e => console.log(e));
+            } else {
+                profileSong.pause();
+            }
+
+            // Manage the Memory Track (Page 3 is at index 2)
+            if (currentIdx === 2) {
+                memorySong.currentTime = 0;
+                memorySong.play().catch(e => console.log("Memory track blocked until interaction: ", e));
+            } else {
+                memorySong.pause();
+            }
         }
 
-        // --- CONSECUTIVE SECONDS COUNTER ---
-        // Date of birth: 01/07/1998 (July 1st, 1998)
+        // --- EXTENDED TIME SINCE BIRTH COUNTER ---
         const dob = new Date("1998-07-01T00:00:00").getTime();
         
         setInterval(() => {
             const now = new Date().getTime();
-            const differenceInSeconds = Math.floor((now - dob) / 1000);
-            document.getElementById('incognitoTimer').innerText = differenceInSeconds.toLocaleString();
+            const differenceInMs = now - dob;
+
+            const days = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((differenceInMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((differenceInMs % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((differenceInMs % (1000 * 60)) / 1000);
+
+            document.getElementById('daysBox').innerText = days.toLocaleString();
+            document.getElementById('hoursBox').innerText = hours.toString().padStart(2, '0');
+            document.getElementById('minsBox').innerText = minutes.toString().padStart(2, '0');
+            document.getElementById('secsBox').innerText = seconds.toString().padStart(2, '0');
         }, 1000);
 
         // --- DODGING BUTTON LOGIC ---
         function dodgeButton() {
             const btn = document.getElementById('passBtn');
-            // Give it a random crazy position when he tries to click it
             const randomX = Math.random() * 200 - 100; 
             const randomY = Math.random() * 200 - 100;
             btn.style.transform = `translate(${randomX}px, ${randomY}px)`;
@@ -243,18 +356,15 @@
 
         // --- MEME POP UP & SOUND TRIGGER ---
         function triggerMeme() {
-            // Play Sound
             const sound = document.getElementById('memeSound');
-            sound.play().catch(e => console.log("Audio couldn't play until user interacts more: ", e));
+            sound.play().catch(e => console.log("Audio play blocked until interaction: ", e));
             
-            // Show Modal
             document.getElementById('memeModal').style.display = 'flex';
         }
 
         function closeMemeAndProceed() {
             document.getElementById('memeModal').style.display = 'none';
-            // Go to the last page (Index 5)
-            nextPage(5);
+            navigatePage(5, 'next'); 
         }
     </script>
 </body>
